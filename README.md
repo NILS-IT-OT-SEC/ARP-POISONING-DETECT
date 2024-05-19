@@ -20,6 +20,8 @@ psutil
 scapy
 termcolor
 
+![Detection of an ARP poisoning attack with ettercap after re-arping the targets.](arp_poisoning_detect_01_screenshot.jpg)
+
 Usage on your own risk.
 No liability is accepted for damages.
 Particular caution is required in productive OT environments with sensitive bus systems.
