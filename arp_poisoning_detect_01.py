@@ -36,7 +36,7 @@ attack_active = False
 previous_attack = False
 
 def update_arp_table(ip, mac):
-    """Refresh ARP table and check duplicate IP addresses."""
+    # Refresh ARP table and check duplicate IP addresses.
     global last_activity, attack_active, previous_attack
     current_time = time.time()
     
@@ -46,21 +46,21 @@ def update_arp_table(ip, mac):
         last_activity = current_time
 
         if len(ip_to_macs[ip]) > 1:
-            if ip not in reported_ips or (current_time - reported_ips[ip]) > 20:
+            if ip not in reported_ips or (current_time - reported_ips[ip]) > 15:
                 print(colored(f"[WARNING] Possible ARP poisoning attack detected: IP address {ip} is used by several MAC addresses: {', '.join(ip_to_macs[ip])}", "red"))
                 reported_ips[ip] = current_time
                 attack_active = True
                 previous_attack = True
 
 def detect_arp_poisoning(packet):
-    """Detect ARP poisoning attack based on ARP packages."""
+    # Detect ARP poisoning attack based on ARP packages.
     if packet.haslayer(scapy.ARP) and packet[scapy.ARP].op == 2:  # ARP reply (is-at)
         src_ip = packet[scapy.ARP].psrc
         src_mac = packet[scapy.ARP].hwsrc
         update_arp_table(src_ip, src_mac)
 
 def get_interface_name_from_ip(ip):
-    """Determine the actual name of the network adapter based on the IP address."""
+    # Determine the actual name of the network adapter based on the IP address.
     for iface in netifaces.interfaces():
         addrs = netifaces.ifaddresses(iface)
         if netifaces.AF_INET in addrs:
@@ -70,7 +70,7 @@ def get_interface_name_from_ip(ip):
     raise RuntimeError(f"No network interface with IP address {ip} was found.")
 
 def get_interface_for_gateway(gateway_ip):
-    """Determine the actual name of the network adapter that is connected to the gateway."""
+    # Determine the actual name of the network adapter that is connected to the gateway.
     for iface in netifaces.interfaces():
         addrs = netifaces.ifaddresses(iface)
         if netifaces.AF_INET in addrs:
@@ -80,7 +80,7 @@ def get_interface_for_gateway(gateway_ip):
     return None
 
 def get_internet_interface():
-    """Determine the network adapter that is connected to the Internet."""
+    # Determine the network adapter that is connected to the Internet.
     gateways = netifaces.gateways()
     default_gateway = gateways.get('default')
     if default_gateway:
@@ -92,7 +92,7 @@ def get_internet_interface():
     return None
 
 def is_virtual_adapter(iface):
-    """Check if the network adapter is virtual."""
+    # Check if the network adapter is virtual.
     for nic in psutil.net_if_addrs()[iface]:
         if nic.family == psutil.AF_LINK:
             # In Linux, virtual adapters often have “veth” or “docker” in their name
@@ -104,7 +104,7 @@ def is_virtual_adapter(iface):
     return False
 
 def get_priority_interface():
-    """Determine the prioritized physical network adapter based on connection type and speed."""
+    # Determine the prioritized physical network adapter based on connection type and speed.
     interfaces = psutil.net_if_addrs()
     ethernet_adapters = []
     wifi_adapters = []
@@ -134,14 +134,14 @@ def get_priority_interface():
         raise RuntimeError("Kein aktiver physischer Netzwerkadapter gefunden.")
 
 def reset_ip(ip):
-    """Reset the status of the IP address."""
+    # Reset the status of the IP address.
     with lock:
         if ip in last_seen:
             del last_seen[ip]
             del ip_to_macs[ip]
 
 def check_inactivity():
-    """Check the attack inactivity of the IP addresses."""
+    # Check the attack inactivity of the IP addresses.
     global last_activity, attack_active, previous_attack
     current_time = time.time()
     inactive_ips = [ip for ip, last in last_seen.items() if current_time - last > 20]
@@ -156,7 +156,7 @@ def check_inactivity():
     Timer(20, check_inactivity).start()
 
 def monitor_network(interface):
-    """Monitor the network for ARP poisoning attacks."""
+    # Monitor the network for ARP poisoning attacks.
     print(colored(f"[INFO] Start detection of ARP poisoning attacks on interface {interface}...", "green"))
     try:
         scapy.sniff(store=False, prn=detect_arp_poisoning, filter="arp", iface=interface)
