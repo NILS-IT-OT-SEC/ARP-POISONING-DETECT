@@ -14,7 +14,7 @@ Please let me know how it works in larger environments.
 
 The functionality of the script can best be tested with arpspoof, ettercap, or bettercap in Kali Linux.
 
-Dependencies on Python libraries that need to be additionally installed via the pip install comamand:
+Dependencies on Python libraries that need to be additionally installed via the pip install command:
 netifaces (may require Microsoft Visual C++ 14.0 or higher, available with the Microsoft C++ Build Tools)
 psutil
 scapy
