@@ -144,16 +144,16 @@ def check_inactivity():
     # Check the attack inactivity of the IP addresses.
     global last_activity, attack_active, previous_attack
     current_time = time.time()
-    inactive_ips = [ip for ip, last in last_seen.items() if current_time - last > 20]
+    inactive_ips = [ip for ip, last in last_seen.items() if current_time - last > 17]
     
     for ip in inactive_ips:
         reset_ip(ip)
 
-    if attack_active and current_time - last_activity > 20:
+    if attack_active and current_time - last_activity > 17:
         print(colored("[INFO]The ARP poisoning attack ended.", "green"))
         attack_active = False
 
-    Timer(20, check_inactivity).start()
+    Timer(5, check_inactivity).start()
 
 def monitor_network(interface):
     # Monitor the network for ARP poisoning attacks.
@@ -173,7 +173,7 @@ if __name__ == "__main__":
             interface = get_priority_interface()
 
         # Start inactivity check
-        Timer(20, check_inactivity).start()
+        Timer(5, check_inactivity).start()
 
         # Start network monitoring
         monitor_network(interface)
