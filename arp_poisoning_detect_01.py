@@ -131,7 +131,7 @@ def get_priority_interface():
         sorted_other_adapters = sorted(other_adapters, key=lambda item: item[1], reverse=True)
         return sorted_other_adapters[0][0]
     else:
-        raise RuntimeError("Kein aktiver physischer Netzwerkadapter gefunden.")
+        raise RuntimeError("No physical network adapter was found.")
 
 def reset_ip(ip):
     # Reset the status of the IP address.
