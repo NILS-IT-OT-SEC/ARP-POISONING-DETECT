@@ -67,7 +67,7 @@ def get_interface_name_from_ip(ip):
             for addr in addrs[netifaces.AF_INET]:
                 if addr['addr'] == ip:
                     return iface
-    raise RuntimeError(f"No network interface with IP address {ip} was found.")
+    raise RuntimeError(f"[INFO] No network interface with IP address {ip} was found.")
 
 def get_interface_for_gateway(gateway_ip):
     # Determine the actual name of the network adapter that is connected to the gateway.
@@ -131,7 +131,7 @@ def get_priority_interface():
         sorted_other_adapters = sorted(other_adapters, key=lambda item: item[1], reverse=True)
         return sorted_other_adapters[0][0]
     else:
-        raise RuntimeError("No physical network adapter was found.")
+        raise RuntimeError("[INFO] No physical network adapter was found.")
 
 def reset_ip(ip):
     # Reset the status of the IP address.
@@ -150,7 +150,7 @@ def check_inactivity():
         reset_ip(ip)
 
     if attack_active and current_time - last_activity > 17:
-        print(colored("[INFO]The ARP poisoning attack ended.", "green"))
+        print(colored("[INFO] The ARP poisoning attack ended.", "green"))
         attack_active = False
 
     Timer(5, check_inactivity).start()
@@ -180,4 +180,4 @@ if __name__ == "__main__":
     except Exception as e:
         print(colored(f"[ERROR] {str(e)}", "red"))
     finally:
-        input("Press any key to end the program...")
+        input("[INFO] Press any key to end the program...")
