@@ -1,4 +1,4 @@
-ARP-POISONING-DETECT version 0.1 by Nils Kruchem for python 3
+ARP-POISONING-DETECT version 0.1 by Nils Kruchem in python 3
 
 Small Python program for detecting ARP poisoning / ARP spoofing attacks in a network by analyzing ARP data packets for duplicate IP assignments to a physical address.
 
